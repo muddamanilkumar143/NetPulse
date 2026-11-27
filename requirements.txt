@@ -6,3 +6,4 @@ sqlalchemy
 pymysql
 alembic
 python-dotenv
+pymongo>=4.20.2,<5.0

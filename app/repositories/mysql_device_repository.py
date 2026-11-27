@@ -18,6 +18,7 @@ class MySqlDeviceRepository:
             device_type=device.device_type,
             ip_address=str(device.ip_address),
             status=device.status,
+            location=device.location,
         )
         self.session.add(model)
         try:
@@ -94,4 +95,5 @@ class MySqlDeviceRepository:
             device_type=device.device_type,
             ip_address=device.ip_address,
             status=device.status,
+            location=device.location,
         )

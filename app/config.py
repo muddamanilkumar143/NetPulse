@@ -20,6 +20,10 @@ DATABASE_URL = os.getenv("DATABASE_URL") or URL.create(
     database=MYSQL_DB,
 ).render_as_string(hide_password=False)
 STORAGE_BACKEND = os.getenv("NETPULSE_STORAGE", "memory").strip().lower()
+MONGODB_URI = os.getenv("MONGODB_URI", "mongodb://localhost:27017")
+MONGODB_DB_NAME = os.getenv("MONGODB_DB_NAME", "netpulse_db")
+DEVICES_COLLECTION = os.getenv("DEVICES_COLLECTION", "devices")
+ALERTS_COLLECTION = os.getenv("ALERTS_COLLECTION", "alerts")
 
-if STORAGE_BACKEND not in {"memory", "mysql"}:
-    raise ValueError("NETPULSE_STORAGE must be either 'memory' or 'mysql'.")
+if STORAGE_BACKEND not in {"memory", "mysql", "mongo"}:
+    raise ValueError("NETPULSE_STORAGE must be 'memory', 'mysql', or 'mongo'.")

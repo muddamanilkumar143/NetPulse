@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0] - 2026-11-27
+
+- Added MongoDB persistence with startup collection indexes while retaining
+  in-memory and MySQL backends.
+- Added backward-compatible optional device location support across repositories.
+- Updated MongoDB driver support to PyMongo 4.20.2.
+
 ## [0.2.0] - 2026-11-27
 
 - Completed the FastAPI device-monitoring baseline: validated device and alert

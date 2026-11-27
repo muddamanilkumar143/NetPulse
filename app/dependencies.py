@@ -2,8 +2,10 @@ from fastapi import Depends
 from sqlalchemy.orm import Session
 
 from app.config import STORAGE_BACKEND
+from app.db.mongo import get_db as get_mongo_db
 from app.db.session import get_db
 from app.repositories.device_repository import InMemoryDeviceRepository
+from app.repositories.mongo_device_repository import MongoDeviceRepository
 from app.repositories.mysql_device_repository import MySqlDeviceRepository
 from app.repositories.protocols import DeviceRepository
 from app.services.device_service import DeviceService
@@ -17,6 +19,8 @@ def get_repository(db: Session | None = Depends(get_db)) -> DeviceRepository:
         if db is None:
             raise RuntimeError("MySQL storage is enabled but no database session exists.")
         return MySqlDeviceRepository(db)
+    if STORAGE_BACKEND == "mongo":
+        return MongoDeviceRepository(get_mongo_db())
     return _in_memory_repository
 
 

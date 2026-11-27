@@ -27,6 +27,7 @@ class DeviceCreate(BaseModel):
     device_type: DeviceType
     ip_address: IPv4Address
     status: DeviceStatus = "online"
+    location: str | None = None
 
 
 class DeviceResponse(BaseModel):
@@ -35,6 +36,7 @@ class DeviceResponse(BaseModel):
     device_type: DeviceType
     ip_address: IPv4Address
     status: DeviceStatus
+    location: str | None = None
 
 
 class StatusUpdate(BaseModel):

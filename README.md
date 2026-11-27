@@ -1,6 +1,6 @@
 # NetPulse
 
-A small modular FastAPI network-device monitoring API. It supports an in-memory repository for quick runs and tests, or MySQL persistence through SQLAlchemy. It does not contact monitored devices.
+A small modular FastAPI network-device monitoring API. It supports in-memory storage for quick runs and tests, or MySQL and MongoDB persistence. It does not contact monitored devices.
 
 ## Run
 
@@ -43,6 +43,26 @@ The first migration creates `devices` and `alerts`; the next adds the nullable `
 
 To create a later migration after changing the ORM models, use `alembic revision --autogenerate -m "describe schema change"`, review the generated migration, then apply it with `alembic upgrade head`.
 
+## MongoDB
+
+MongoDB `9.0.8` is the current stable server release used for this integration
+(as of 2026-11-27). PyMongo `4.20.2` is the current driver release. Install a
+MongoDB 9.0.8 server for your operating system, then configure `.env`:
+
+```dotenv
+NETPULSE_STORAGE=mongo
+MONGODB_URI=mongodb://localhost:27017
+MONGODB_DB_NAME=netpulse_db
+DEVICES_COLLECTION=devices
+ALERTS_COLLECTION=alerts
+```
+
+Start the API with `uvicorn app.main:app --reload`. Startup creates the device
+and alert collections' indexes, including the unique device ID index. The
+MongoDB adapter uses the same repository contract as the in-memory and MySQL
+backends. Check the installed server with `mongod --version` and run the test
+suite with `python -m pytest -q`.
+
 ## Architecture
 
 - Routes validate HTTP input and translate service errors into HTTP status codes.
@@ -50,6 +70,6 @@ To create a later migration after changing the ORM models, use `alembic revision
 - The repository owns in-memory device and alert storage and returns copies.
 - The event function records an alert through the repository when the service detects an online-to-offline transition.
 
-The repository is injected into the service, so the in-memory and MySQL adapters implement the same operations without changing the service's business rules. The route, service, repository, and event modules are parts of one deployable modular monolith, not separate services.
+The repository is injected into the service, so the in-memory, MySQL, and MongoDB adapters implement the same operations without changing the service's business rules. The route, service, repository, and event modules are parts of one deployable modular monolith, not separate services.
 
 FastAPI builds `/openapi.json` from the registered routes, their response metadata, and the Pydantic request and response models. Swagger UI at `/docs` renders that generated contract.
